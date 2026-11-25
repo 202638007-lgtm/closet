@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="CLOSET Editorial Lookbook">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6f2ec" />
+      <stop offset="55%" stop-color="#ebe3d5" />
+      <stop offset="100%" stop-color="#dfd3c0" />
+    </linearGradient>
+    <linearGradient id="coatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22201e" />
+      <stop offset="100%" stop-color="#111111" />
+    </linearGradient>
+    <linearGradient id="trenchGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c9b89e" />
+      <stop offset="100%" stop-color="#b49f80" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="760" fill="url(#bgGrad)" />
+
+  <!-- Architectural backdrop blocks -->
+  <rect x="650" y="60" width="460" height="640" fill="#f9f7f3" />
+  <rect x="700" y="110" width="360" height="540" fill="#efe9df" />
+  <line x1="650" y1="380" x2="1110" y2="380" stroke="#dfd5c7" stroke-width="1" />
+
+  <!-- Minimal garment hanger rail -->
+  <line x1="120" y1="150" x2="560" y2="150" stroke="#1a1a1a" stroke-width="3" />
+  <line x1="170" y1="90" x2="170" y2="150" stroke="#1a1a1a" stroke-width="2" />
+  <line x1="510" y1="90" x2="510" y2="150" stroke="#1a1a1a" stroke-width="2" />
+
+  <!-- Garment 1: Beige Trench Coat -->
+  <path d="M235 150 L235 178" stroke="#1a1a1a" stroke-width="2.5" />
+  <path d="M205 195 Q235 172 265 195" fill="none" stroke="#1a1a1a" stroke-width="2.5" />
+  <path d="M192 204 L235 192 L278 204 L302 365 L278 370 L264 265 L270 545 L200 545 L206 265 L192 370 L168 365 Z" fill="url(#trenchGrad)" />
+  <path d="M220 196 L235 245 L250 196" fill="#dfd1bc" />
+  <line x1="235" y1="245" x2="235" y2="545" stroke="#9e896b" stroke-width="1.5" />
+  <rect x="203" y="340" width="64" height="12" fill="#9f896b" />
+
+  <!-- Garment 2: Black Minimal Coat -->
+  <path d="M415 150 L415 178" stroke="#1a1a1a" stroke-width="2.5" />
+  <path d="M385 195 Q415 172 445 195" fill="none" stroke="#1a1a1a" stroke-width="2.5" />
+  <path d="M368 202 L415 190 L462 202 L490 385 L465 390 L448 268 L456 595 L374 595 L382 268 L365 390 L340 385 Z" fill="url(#coatGrad)" />
+  <path d="M398 195 L415 260 L432 195" fill="#2b2b2b" />
+  <circle cx="422" cy="300" r="3" fill="#b49f80" />
+  <circle cx="422" cy="340" r="3" fill="#b49f80" />
+
+  <!-- Editorial silhouette & frame on right -->
+  <rect x="750" y="160" width="260" height="390" fill="#ffffff" stroke="#d9cfbf" stroke-width="1.5" />
+  <circle cx="880" cy="245" r="24" fill="#d8cab8" />
+  <path d="M840 290 Q880 272 920 290 L942 480 L818 480 Z" fill="#181818" />
+  <rect x="838" y="480" width="84" height="36" fill="#ede7dd" />
+
+  <!-- Subtle editorial labels -->
+  <text x="750" y="592" font-family="sans-serif" font-size="13" letter-spacing="4" fill="#6f675d">AUTUMN / WINTER COLLECTION</text>
+  <text x="750" y="618" font-family="sans-serif" font-size="22" font-weight="600" letter-spacing="6" fill="#111111">CLOSET ATELIER</text>
+</svg>

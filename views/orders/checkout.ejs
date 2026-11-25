@@ -1,0 +1,155 @@
+<%- include('../partials/header') %>
+
+<main class="orders-main">
+  <div class="container">
+    <header class="page-head">
+      <span class="section-eyebrow">CHECKOUT</span>
+      <h1 class="page-title">주문서 작성</h1>
+      <p class="page-subtitle">배송 정보를 확인한 후 주문을 완료해 주세요.</p>
+    </header>
+
+    <% if (error) { %>
+      <div class="alert alert-error" role="alert">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/orders" method="POST" class="checkout-layout" id="checkoutForm">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <input type="hidden" name="checkout_token" value="<%= checkoutToken %>" />
+
+      <div class="checkout-left-col">
+        <section class="order-box">
+          <h2 class="order-box-title">배송 정보</h2>
+
+          <div class="order-form-grid">
+            <div class="form-row-two">
+              <div class="form-group">
+                <label for="shippingName" class="form-label">받는 분 성함 <span class="required-mark">*</span></label>
+                <input
+                  type="text"
+                  id="shippingName"
+                  name="name"
+                  class="form-input"
+                  value="<%= shippingData.name || '' %>"
+                  required
+                  minlength="2"
+                  maxlength="50"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="shippingPhone" class="form-label">연락처 <span class="required-mark">*</span></label>
+                <input
+                  type="tel"
+                  id="shippingPhone"
+                  name="phone"
+                  class="form-input"
+                  placeholder="010-1234-5678"
+                  value="<%= shippingData.phone || '' %>"
+                  required
+                  maxlength="20"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="shippingAddress" class="form-label">배송지 주소 <span class="required-mark">*</span></label>
+              <input
+                type="text"
+                id="shippingAddress"
+                name="address"
+                class="form-input"
+                placeholder="기본 주소를 입력해 주세요"
+                value="<%= shippingData.address || '' %>"
+                required
+                maxlength="255"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="shippingDetailAddress" class="form-label">상세 주소</label>
+              <input
+                type="text"
+                id="shippingDetailAddress"
+                name="detail_address"
+                class="form-input"
+                placeholder="동/호수 등 상세 주소를 입력해 주세요"
+                value="<%= shippingData.detail_address || '' %>"
+                maxlength="255"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="shippingMemo" class="form-label">배송 메모</label>
+              <input
+                type="text"
+                id="shippingMemo"
+                name="memo"
+                class="form-input"
+                placeholder="예: 문 앞에 놓아주세요"
+                value="<%= shippingData.memo || '' %>"
+                maxlength="255"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="order-box">
+          <h2 class="order-box-title">주문 상품 (<%= totalQuantity %>개)</h2>
+
+          <div class="order-item-list">
+            <% items.forEach(function(item) { %>
+              <article class="order-item-row">
+                <img
+                  src="<%= item.image ? item.image : '/images/no-image.svg' %>"
+                  alt="<%= item.product_name %>"
+                  class="order-item-thumb"
+                />
+                <div class="order-item-info">
+                  <h3 class="order-item-name"><%= item.product_name %></h3>
+                  <p class="order-item-meta">
+                    <% if (item.size) { %><span>사이즈: <%= item.size %></span><% } %>
+                    <% if (item.color) { %><span>색상: <%= item.color %></span><% } %>
+                    <span>수량: <%= item.quantity %>개</span>
+                  </p>
+                  <p class="order-item-unit"><%= item.price.toLocaleString('ko-KR') %>원</p>
+                </div>
+                <div class="order-item-total">
+                  <%= item.lineTotal.toLocaleString('ko-KR') %>원
+                </div>
+              </article>
+            <% }); %>
+          </div>
+        </section>
+      </div>
+
+      <aside class="checkout-right-col">
+        <div class="cart-summary-card">
+          <h2 class="summary-title">최종 결제 금액</h2>
+
+          <div class="summary-row">
+            <span>총 상품 수량</span>
+            <span><%= totalQuantity %>개</span>
+          </div>
+          <div class="summary-row">
+            <span>배송비</span>
+            <span>무료</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-total-row">
+            <span>총 주문 금액</span>
+            <strong><%= totalPrice.toLocaleString('ko-KR') %>원</strong>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="checkoutSubmitBtn">
+            주문하기
+          </button>
+          <a href="/cart" class="btn btn-outline btn-full">장바구니로 돌아가기</a>
+        </div>
+      </aside>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+
+<main class="orders-main">
+  <div class="container">
+    <header class="page-head">
+      <span class="section-eyebrow">MY ORDERS</span>
+      <h1 class="page-title">주문 내역</h1>
+      <p class="page-subtitle">총 <strong><%= orders.length %></strong>건의 주문 내역이 있습니다.</p>
+    </header>
+
+    <% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+      <div class="alert <%= flash.type === 'error' ? 'alert-error' : 'alert-success' %>" role="alert">
+        <%= flash.message %>
+      </div>
+    <% } %>
+
+    <% if (orders && orders.length > 0) { %>
+      <div class="order-history-list">
+        <% orders.forEach(function(order) { %>
+          <article class="order-history-card">
+            <div class="order-history-head">
+              <div>
+                <span class="order-history-date"><%= formatKoreanDateTime(order.order_date) %></span>
+                <h2 class="order-history-id"><%= order.order_id %></h2>
+              </div>
+              <span class="order-status-badge"><%= order.status %></span>
+            </div>
+
+            <div class="order-history-body">
+              <div class="order-history-summary">
+                <% if (order.items && order.items.length > 0) { %>
+                  <img
+                    src="<%= order.items[0].image ? order.items[0].image : '/images/no-image.svg' %>"
+                    alt="<%= order.items[0].product_name %>"
+                    class="order-item-thumb"
+                  />
+                  <div>
+                    <p class="order-summary-name">
+                      <%= order.items[0].product_name %>
+                      <% if (order.items.length > 1) { %>
+                        외 <%= order.items.length - 1 %>건
+                      <% } %>
+                    </p>
+                    <p class="order-summary-qty">총 <%= order.total_quantity %>개 상품</p>
+                  </div>
+                <% } %>
+              </div>
+
+              <div class="order-history-right">
+                <p class="order-history-price"><%= Number(order.total_price).toLocaleString('ko-KR') %>원</p>
+                <a href="/orders/<%= encodeURIComponent(order.order_id) %>" class="btn btn-outline order-detail-btn">
+                  상세보기
+                </a>
+              </div>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="empty-state-box">
+        <p class="empty-state-title">아직 주문 내역이 없습니다.</p>
+        <p class="empty-state-desc">CLOSET의 다양한 상품을 둘러보고 첫 주문을 진행해 보세요.</p>
+        <div class="empty-state-action">
+          <a href="/products" class="btn btn-primary">상품 보러 가기</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

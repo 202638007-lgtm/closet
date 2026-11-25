@@ -1,0 +1,160 @@
+<%- include('../partials/header') %>
+
+<main class="cart-main">
+  <div class="container">
+    <header class="page-head">
+      <span class="section-eyebrow">SHOPPING BAG</span>
+      <h1 class="page-title">장바구니</h1>
+      <p class="page-subtitle">
+        담긴 상품 총 <strong><%= totalQuantity %></strong>개
+      </p>
+    </header>
+
+    <% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+      <div class="alert <%= flash.type === 'error' ? 'alert-error' : 'alert-success' %>" role="alert">
+        <%= flash.message %>
+      </div>
+    <% } %>
+
+    <% if (items && items.length > 0) { %>
+      <div class="cart-layout">
+        <section class="cart-items-col" aria-label="장바구니 상품 목록">
+          <% items.forEach(function(item) { %>
+            <article class="cart-item-card">
+              <a href="/products/<%= item.product_id %>" class="cart-item-thumb-link">
+                <img
+                  src="<%= item.image ? item.image : '/images/no-image.svg' %>"
+                  alt="<%= item.name %>"
+                  class="cart-item-thumb"
+                />
+              </a>
+
+              <div class="cart-item-body">
+                <div class="cart-item-top">
+                  <div>
+                    <span class="product-category"><%= item.category %></span>
+                    <h2 class="cart-item-name">
+                      <a href="/products/<%= item.product_id %>"><%= item.name %></a>
+                    </h2>
+                    <p class="cart-item-options">
+                      <% if (item.size) { %><span>사이즈: <strong><%= item.size %></strong></span><% } %>
+                      <% if (item.color) { %><span>색상: <strong><%= item.color %></strong></span><% } %>
+                      <% if (!item.size && !item.color) { %><span>단일 옵션</span><% } %>
+                    </p>
+                    <p class="cart-item-unit-price">
+                      단가 <%= item.price.toLocaleString('ko-KR') %>원
+                      <span class="cart-item-stock">(재고 <%= item.stock %>개)</span>
+                    </p>
+                    <% if (item.isStockInsufficient) { %>
+                      <p class="cart-stock-warning">재고가 부족하거나 품절된 상품입니다. 수량을 조정해 주세요.</p>
+                    <% } %>
+                  </div>
+
+                  <form action="/cart/remove" method="POST" class="cart-remove-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <input type="hidden" name="product_id" value="<%= item.product_id %>" />
+                    <input type="hidden" name="size" value="<%= item.size %>" />
+                    <input type="hidden" name="color" value="<%= item.color %>" />
+                    <button type="submit" class="cart-remove-btn" aria-label="상품 삭제">삭제</button>
+                  </form>
+                </div>
+
+                <div class="cart-item-bottom">
+                  <div class="cart-qty-controls">
+                    <form action="/cart/update" method="POST" class="cart-qty-step-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <input type="hidden" name="product_id" value="<%= item.product_id %>" />
+                      <input type="hidden" name="size" value="<%= item.size %>" />
+                      <input type="hidden" name="color" value="<%= item.color %>" />
+                      <input type="hidden" name="action" value="decrease" />
+                      <button
+                        type="submit"
+                        class="qty-step-btn"
+                        aria-label="수량 감소"
+                        <%= item.quantity <= 1 ? 'disabled' : '' %>
+                      >-</button>
+                    </form>
+
+                    <form action="/cart/update" method="POST" class="cart-qty-input-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <input type="hidden" name="product_id" value="<%= item.product_id %>" />
+                      <input type="hidden" name="size" value="<%= item.size %>" />
+                      <input type="hidden" name="color" value="<%= item.color %>" />
+                      <input type="hidden" name="action" value="set" />
+                      <input
+                        type="number"
+                        name="quantity"
+                        value="<%= item.quantity %>"
+                        min="1"
+                        max="<%= Math.max(1, item.stock) %>"
+                        class="cart-qty-input"
+                        aria-label="수량"
+                      />
+                      <button type="submit" class="qty-apply-btn">변경</button>
+                    </form>
+
+                    <form action="/cart/update" method="POST" class="cart-qty-step-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <input type="hidden" name="product_id" value="<%= item.product_id %>" />
+                      <input type="hidden" name="size" value="<%= item.size %>" />
+                      <input type="hidden" name="color" value="<%= item.color %>" />
+                      <input type="hidden" name="action" value="increase" />
+                      <button
+                        type="submit"
+                        class="qty-step-btn"
+                        aria-label="수량 증가"
+                        <%= item.quantity >= item.stock ? 'disabled' : '' %>
+                      >+</button>
+                    </form>
+                  </div>
+
+                  <p class="cart-line-total"><%= item.lineTotal.toLocaleString('ko-KR') %>원</p>
+                </div>
+              </div>
+            </article>
+          <% }); %>
+        </section>
+
+        <aside class="cart-summary-col" aria-label="주문 예상 금액">
+          <div class="cart-summary-card">
+            <h2 class="summary-title">주문 예상 금액</h2>
+
+            <div class="summary-row">
+              <span>총 상품 수량</span>
+              <span><%= totalQuantity %>개</span>
+            </div>
+            <div class="summary-row">
+              <span>배송비</span>
+              <span>무료</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-total-row">
+              <span>전체 합계 금액</span>
+              <strong><%= totalAmount.toLocaleString('ko-KR') %>원</strong>
+            </div>
+
+            <% if (hasStockIssue) { %>
+              <button type="button" class="btn btn-primary btn-full summary-order-btn" disabled>
+                주문하기 (재고 확인 필요)
+              </button>
+              <p class="detail-helper-note">재고가 부족하거나 품절된 상품의 수량을 조정한 후 주문해 주세요.</p>
+            <% } else { %>
+              <a href="/orders/checkout" class="btn btn-primary btn-full">주문하기</a>
+            <% } %>
+            <a href="/products" class="btn btn-outline btn-full">쇼핑 계속하기</a>
+          </div>
+        </aside>
+      </div>
+    <% } else { %>
+      <div class="empty-state-box">
+        <p class="empty-state-title">장바구니가 비어 있습니다.</p>
+        <p class="empty-state-desc">마음에 드는 CLOSET 상품을 담아보세요.</p>
+        <div class="empty-state-action">
+          <a href="/products" class="btn btn-primary">상품 보러 가기</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

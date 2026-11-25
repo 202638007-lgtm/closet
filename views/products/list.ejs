@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+
+<main class="products-main">
+  <div class="container">
+    <header class="page-head">
+      <span class="section-eyebrow">COLLECTION</span>
+      <h1 class="page-title">
+        <% if (activeCategory) { %>
+          <%= activeCategory %>
+        <% } else if (searchTerm) { %>
+          검색 결과
+        <% } else { %>
+          ALL PRODUCTS
+        <% } %>
+      </h1>
+      <p class="page-subtitle">
+        <% if (searchTerm) { %>
+          <strong>"<%= searchTerm %>"</strong> 검색 결과 총 <strong><%= products.length %></strong>개
+        <% } else { %>
+          총 <strong><%= products.length %></strong>개의 상품이 있습니다.
+        <% } %>
+      </p>
+    </header>
+
+    <div class="products-toolbar">
+      <nav class="category-tabs" aria-label="상품 카테고리 필터">
+        <a href="/products" class="category-tab <%= !activeCategory ? 'is-active' : '' %>">ALL</a>
+        <% categories.forEach(function(cat) { %>
+          <a
+            href="/products?category=<%= encodeURIComponent(cat) %>"
+            class="category-tab <%= activeCategory === cat ? 'is-active' : '' %>"
+          ><%= cat %></a>
+        <% }); %>
+      </nav>
+
+      <form action="/products" method="GET" class="inline-search-form" role="search">
+        <% if (activeCategory) { %>
+          <input type="hidden" name="category" value="<%= activeCategory %>" />
+        <% } %>
+        <input
+          type="search"
+          name="search"
+          class="inline-search-input"
+          placeholder="상품명 검색"
+          value="<%= searchTerm || '' %>"
+          maxlength="50"
+          aria-label="상품명 검색"
+        />
+        <button type="submit" class="btn btn-primary inline-search-btn">검색</button>
+      </form>
+    </div>
+
+    <% if (validationError) { %>
+      <div class="alert alert-error" role="alert">
+        <%= validationError %>
+      </div>
+    <% } %>
+
+    <% if (products && products.length > 0) { %>
+      <div class="product-grid">
+        <% products.forEach(function(product) { %>
+          <article class="product-card">
+            <a href="/products/<%= product.id %>" class="product-card-link">
+              <div class="product-thumb-wrap">
+                <img
+                  src="<%= product.image ? product.image : '/images/no-image.svg' %>"
+                  alt="<%= product.name %>"
+                  class="product-thumb"
+                  loading="lazy"
+                />
+                <% if (Number(product.stock) <= 0) { %>
+                  <span class="product-badge-soldout">품절</span>
+                <% } %>
+              </div>
+              <div class="product-info">
+                <div class="product-meta-row">
+                  <span class="product-category"><%= product.category %></span>
+                  <span class="product-stock <%= Number(product.stock) <= 0 ? 'is-soldout' : '' %>">
+                    <%= Number(product.stock) > 0 ? '재고 ' + product.stock + '개' : '품절' %>
+                  </span>
+                </div>
+                <h2 class="product-name"><%= product.name %></h2>
+                <p class="product-price"><%= Number(product.price).toLocaleString('ko-KR') %>원</p>
+              </div>
+            </a>
+          </article>
+        <% }); %>
+      </div>
+    <% } else if (!validationError) { %>
+      <div class="empty-state-box">
+        <% if (searchTerm) { %>
+          <p class="empty-state-title">"<%= searchTerm %>"에 대한 검색 결과가 없습니다.</p>
+          <p class="empty-state-desc">다른 검색어로 다시 시도하거나 전체 상품을 확인해 주세요.</p>
+        <% } else if (activeCategory) { %>
+          <p class="empty-state-title"><%= activeCategory %> 카테고리에 등록된 상품이 없습니다.</p>
+          <p class="empty-state-desc">곧 새로운 상품이 업데이트될 예정입니다.</p>
+        <% } else { %>
+          <p class="empty-state-title">현재 등록된 상품이 없습니다.</p>
+          <p class="empty-state-desc">상품이 등록되면 이곳에서 바로 확인하실 수 있습니다.</p>
+        <% } %>
+        <div class="empty-state-action">
+          <a href="/products" class="btn btn-outline">전체 상품 보기</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

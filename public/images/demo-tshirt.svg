@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="데일리 티셔츠">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M238 220 Q300 248 362 220 L446 270 L418 355 L385 335 L385 560 L215 560 L215 335 L182 355 L154 270 Z" fill="#1f1e1c" />
+  <path d="M245 222 Q300 255 355 222" fill="none" stroke="#5c5750" stroke-width="4" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">TOP</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">DAILY T-SHIRT</text>
+</svg>

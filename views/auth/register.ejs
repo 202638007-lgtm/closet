@@ -1,0 +1,143 @@
+<%- include('../partials/header') %>
+
+<main class="auth-main">
+  <div class="container">
+    <section class="auth-card auth-card-wide">
+      <div class="auth-header">
+        <span class="section-eyebrow">CREATE ACCOUNT</span>
+        <h1 class="auth-title">회원가입</h1>
+        <p class="auth-subtitle">CLOSET의 새로운 회원이 되어 다양한 혜택을 누려보세요.</p>
+      </div>
+
+      <% if (error) { %>
+        <div class="alert alert-error" role="alert">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <form action="/auth/register" method="POST" class="auth-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div class="form-group">
+          <label for="userid" class="form-label">아이디 <span class="required-mark">*</span></label>
+          <input
+            type="text"
+            id="userid"
+            name="userid"
+            class="form-input"
+            placeholder="영문, 숫자, 밑줄(_) 4~20자"
+            value="<%= formData && formData.userid ? formData.userid : '' %>"
+            required
+            minlength="4"
+            maxlength="20"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-row-two">
+          <div class="form-group">
+            <label for="password" class="form-label">비밀번호 <span class="required-mark">*</span></label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="영문 + 숫자 포함 8자 이상"
+              required
+              minlength="8"
+              maxlength="64"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="passwordConfirm" class="form-label">비밀번호 확인 <span class="required-mark">*</span></label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              class="form-input"
+              placeholder="비밀번호를 다시 입력하세요"
+              required
+              minlength="8"
+              maxlength="64"
+              autocomplete="new-password"
+            />
+          </div>
+        </div>
+
+        <div class="form-row-two">
+          <div class="form-group">
+            <label for="name" class="form-label">이름 <span class="required-mark">*</span></label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              placeholder="홍길동"
+              value="<%= formData && formData.name ? formData.name : '' %>"
+              required
+              minlength="2"
+              maxlength="50"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">전화번호 <span class="required-mark">*</span></label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="form-input"
+              placeholder="010-1234-5678"
+              value="<%= formData && formData.phone ? formData.phone : '' %>"
+              required
+              maxlength="20"
+              autocomplete="tel"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">이메일 <span class="required-mark">*</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-input"
+            placeholder="example@closet.co.kr"
+            value="<%= formData && formData.email ? formData.email : '' %>"
+            required
+            maxlength="100"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="address" class="form-label">주소 <span class="required-mark">*</span></label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            class="form-input"
+            placeholder="배송받으실 주소를 입력하세요"
+            value="<%= formData && formData.address ? formData.address : '' %>"
+            required
+            maxlength="255"
+            autocomplete="street-address"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full auth-submit-btn">회원가입 완료</button>
+      </form>
+
+      <div class="auth-footer-links">
+        <span>이미 계정이 있으신가요?</span>
+        <a href="/auth/login" class="auth-text-link">로그인</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

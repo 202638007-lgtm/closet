@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="오버핏 셔츠">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M235 205 L268 188 L300 220 L332 188 L365 205 L440 248 L462 450 L408 458 L390 315 L390 570 Q300 590 210 570 L210 315 L192 458 L138 450 L160 248 Z" fill="#ffffff" stroke="#d5cec2" stroke-width="2.5" />
+  <path d="M268 188 L300 232 L332 188" fill="none" stroke="#b9afa0" stroke-width="2.5" />
+  <line x1="300" y1="220" x2="300" y2="578" stroke="#d5cec2" stroke-width="2" />
+  <rect x="324" y="310" width="44" height="48" fill="none" stroke="#d5cec2" stroke-width="2" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">NEW</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">OVERFIT POPLIN SHIRT</text>
+</svg>

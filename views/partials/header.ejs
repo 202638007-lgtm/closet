@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' && title ? title : 'CLOSET | 모던 미니멀 패션 스토어' %></title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner container">
+      <button
+        type="button"
+        class="mobile-menu-btn"
+        id="mobileMenuBtn"
+        aria-label="메뉴 열기"
+        aria-expanded="false"
+        aria-controls="mobileNavDrawer"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <a href="/" class="brand-logo">CLOSET</a>
+
+      <nav class="main-nav" aria-label="주 메뉴">
+        <ul class="nav-list">
+          <li><a href="/" class="nav-link <%= currentPath === '/' ? 'is-active' : '' %>">HOME</a></li>
+          <li><a href="/products?category=NEW" class="nav-link">NEW</a></li>
+          <li><a href="/products?category=BEST" class="nav-link">BEST</a></li>
+          <li><a href="/products?category=OUTER" class="nav-link">OUTER</a></li>
+          <li><a href="/products?category=TOP" class="nav-link">TOP</a></li>
+          <li><a href="/products?category=BOTTOM" class="nav-link">BOTTOM</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <form action="/products" method="GET" class="header-search-form" role="search">
+          <input
+            type="search"
+            name="search"
+            class="header-search-input"
+            placeholder="상품명 검색"
+            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            maxlength="50"
+            aria-label="상품 검색"
+          />
+          <button type="submit" class="header-search-btn" aria-label="검색">검색</button>
+        </form>
+
+        <div class="header-user-links">
+          <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+            <span class="utility-user-name"><%= currentUser.name %>님</span>
+            <% if (currentUser.role === 'admin') { %>
+              <a href="/admin" class="utility-link utility-admin-link <%= currentPath.startsWith('/admin') ? 'is-active' : '' %>">관리자</a>
+            <% } %>
+            <a href="/orders" class="utility-link <%= currentPath.startsWith('/orders') ? 'is-active' : '' %>">주문 내역</a>
+            <a href="/cart" class="utility-link cart-link">장바구니 (<%= typeof cartCount !== 'undefined' ? cartCount : 0 %>)</a>
+            <form action="/auth/logout" method="POST" class="inline-logout-form">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <button type="submit" class="utility-link utility-btn-link">로그아웃</button>
+            </form>
+          <% } else { %>
+            <a href="/auth/login" class="utility-link <%= currentPath === '/auth/login' ? 'is-active' : '' %>">로그인</a>
+            <a href="/auth/register" class="utility-link <%= currentPath === '/auth/register' ? 'is-active' : '' %>">회원가입</a>
+            <a href="/cart" class="utility-link cart-link">장바구니</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop" hidden></div>
+    <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-hidden="true">
+      <div class="mobile-drawer-header">
+        <span class="brand-logo">CLOSET</span>
+        <button type="button" class="mobile-close-btn" id="mobileCloseBtn" aria-label="메뉴 닫기">&times;</button>
+      </div>
+
+      <form action="/products" method="GET" class="mobile-search-form" role="search">
+        <input
+          type="search"
+          name="search"
+          class="mobile-search-input"
+          placeholder="상품명을 검색해보세요"
+          value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+          maxlength="50"
+          aria-label="모바일 상품 검색"
+        />
+        <button type="submit" class="mobile-search-btn">검색</button>
+      </form>
+
+      <nav aria-label="모바일 메뉴">
+        <ul class="mobile-nav-list">
+          <li><a href="/" class="mobile-nav-link">HOME</a></li>
+          <li><a href="/products?category=NEW" class="mobile-nav-link">NEW</a></li>
+          <li><a href="/products?category=BEST" class="mobile-nav-link">BEST</a></li>
+          <li><a href="/products?category=OUTER" class="mobile-nav-link">OUTER</a></li>
+          <li><a href="/products?category=TOP" class="mobile-nav-link">TOP</a></li>
+          <li><a href="/products?category=BOTTOM" class="mobile-nav-link">BOTTOM</a></li>
+        </ul>
+      </nav>
+
+      <div class="mobile-user-actions">
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <p class="mobile-user-greeting"><strong><%= currentUser.name %></strong>님으로 로그인 중</p>
+          <% if (currentUser.role === 'admin') { %>
+            <a href="/admin" class="btn btn-primary btn-full">관리자 페이지</a>
+          <% } %>
+          <a href="/orders" class="btn btn-outline btn-full">주문 내역</a>
+          <a href="/cart" class="btn btn-beige btn-full">장바구니 (<%= typeof cartCount !== 'undefined' ? cartCount : 0 %>)</a>
+          <form action="/auth/logout" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit" class="btn btn-outline btn-full">로그아웃</button>
+          </form>
+        <% } else { %>
+          <a href="/auth/login" class="btn btn-outline btn-full">로그인</a>
+          <a href="/auth/register" class="btn btn-primary btn-full">회원가입</a>
+          <a href="/cart" class="btn btn-beige btn-full">장바구니</a>
+        <% } %>
+      </div>
+    </aside>
+  </header>

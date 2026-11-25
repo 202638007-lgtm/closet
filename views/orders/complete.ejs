@@ -1,0 +1,88 @@
+<%- include('../partials/header') %>
+
+<main class="orders-main">
+  <div class="container">
+    <section class="order-complete-card">
+      <span class="section-eyebrow">ORDER COMPLETED</span>
+      <h1 class="order-complete-title">주문이 정상적으로 완료되었습니다.</h1>
+      <p class="order-complete-desc">주문해 주셔서 감사합니다. 아래에서 주문 내역을 확인하실 수 있습니다.</p>
+
+      <div class="order-meta-grid">
+        <div class="order-meta-item">
+          <span class="order-meta-label">주문번호</span>
+          <strong class="order-meta-value"><%= order.order_id %></strong>
+        </div>
+        <div class="order-meta-item">
+          <span class="order-meta-label">주문 일시</span>
+          <strong class="order-meta-value"><%= formatKoreanDateTime(order.order_date) %></strong>
+        </div>
+        <div class="order-meta-item">
+          <span class="order-meta-label">주문 상태</span>
+          <strong class="order-status-badge"><%= order.status %></strong>
+        </div>
+        <div class="order-meta-item">
+          <span class="order-meta-label">총 주문 금액</span>
+          <strong class="order-meta-value"><%= Number(order.total_price).toLocaleString('ko-KR') %>원</strong>
+        </div>
+      </div>
+
+      <div class="order-box">
+        <h2 class="order-box-title">주문 상품 (<%= order.total_quantity %>개)</h2>
+        <div class="order-item-list">
+          <% order.items.forEach(function(item) { %>
+            <article class="order-item-row">
+              <img
+                src="<%= item.image ? item.image : '/images/no-image.svg' %>"
+                alt="<%= item.product_name %>"
+                class="order-item-thumb"
+              />
+              <div class="order-item-info">
+                <h3 class="order-item-name"><%= item.product_name %></h3>
+                <p class="order-item-meta">
+                  <% if (item.size) { %><span>사이즈: <%= item.size %></span><% } %>
+                  <% if (item.color) { %><span>색상: <%= item.color %></span><% } %>
+                  <span>수량: <%= item.quantity %>개</span>
+                </p>
+                <p class="order-item-unit"><%= Number(item.price).toLocaleString('ko-KR') %>원</p>
+              </div>
+              <div class="order-item-total">
+                <%= (Number(item.price) * Number(item.quantity)).toLocaleString('ko-KR') %>원
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="order-box">
+        <h2 class="order-box-title">배송 정보</h2>
+        <dl class="shipping-dl">
+          <div class="shipping-dl-row">
+            <dt>받는 분</dt>
+            <dd><%= order.shipping.name %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>연락처</dt>
+            <dd><%= order.shipping.phone %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>배송 주소</dt>
+            <dd><%= order.shipping.address %> <%= order.shipping.detail_address || '' %></dd>
+          </div>
+          <% if (order.shipping.memo) { %>
+            <div class="shipping-dl-row">
+              <dt>배송 메모</dt>
+              <dd><%= order.shipping.memo %></dd>
+            </div>
+          <% } %>
+        </dl>
+      </div>
+
+      <div class="order-complete-actions">
+        <a href="/orders" class="btn btn-primary">주문 내역 보기</a>
+        <a href="/products" class="btn btn-outline">쇼핑 계속하기</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

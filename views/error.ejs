@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+
+<main class="orders-main">
+  <div class="container">
+    <div class="empty-state-box not-found-box">
+      <span class="section-eyebrow">ERROR <%= statusCode %></span>
+      <h1 class="not-found-title"><%= heading %></h1>
+      <p class="empty-state-desc"><%= message %></p>
+      <div class="empty-state-action">
+        <a href="/" class="btn btn-primary">메인으로 이동</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

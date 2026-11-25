@@ -1,0 +1,25 @@
+<div class="admin-header-bar">
+  <div>
+    <span class="section-eyebrow">CLOSET ADMIN</span>
+    <h1 class="page-title"><%= adminHeading %></h1>
+    <% if (typeof adminSubtitle !== 'undefined' && adminSubtitle) { %>
+      <p class="page-subtitle"><%= adminSubtitle %></p>
+    <% } %>
+  </div>
+  <div class="admin-header-actions">
+    <a href="/" class="btn btn-outline admin-btn-sm">스토어 보기</a>
+  </div>
+</div>
+
+<nav class="admin-nav" aria-label="관리자 메뉴">
+  <a href="/admin" class="admin-nav-tab <%= currentPath === '/admin' ? 'is-active' : '' %>">대시보드</a>
+  <a href="/admin/products" class="admin-nav-tab <%= currentPath.startsWith('/admin/products') ? 'is-active' : '' %>">상품 관리</a>
+  <a href="/admin/members" class="admin-nav-tab <%= currentPath.startsWith('/admin/members') ? 'is-active' : '' %>">회원 관리</a>
+  <a href="/admin/orders" class="admin-nav-tab <%= currentPath.startsWith('/admin/orders') ? 'is-active' : '' %>">주문 관리</a>
+</nav>
+
+<% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+  <div class="alert <%= flash.type === 'error' ? 'alert-error' : 'alert-success' %>" role="alert">
+    <%= flash.message %>
+  </div>
+<% } %>

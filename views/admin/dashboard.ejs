@@ -1,0 +1,217 @@
+<%- include('../partials/header') %>
+
+<main class="admin-main">
+  <div class="container">
+    <%- include('./_nav', {
+      adminHeading: '관리자 대시보드',
+      adminSubtitle: '상품, 회원, 주문 현황을 한눈에 확인하고 관리합니다.'
+    }) %>
+
+    <section class="admin-kpi-grid" aria-label="주요 현황">
+      <article class="admin-kpi-card">
+        <span class="admin-kpi-label">총 매출액 (취소 제외)</span>
+        <strong class="admin-kpi-value"><%= Number(stats.totalRevenue).toLocaleString('ko-KR') %>원</strong>
+        <span class="admin-kpi-meta">전체 주문 <%= stats.totalOrders %>건 기준</span>
+      </article>
+
+      <article class="admin-kpi-card">
+        <span class="admin-kpi-label">전체 주문 수</span>
+        <strong class="admin-kpi-value"><%= stats.totalOrders %>건</strong>
+        <span class="admin-kpi-meta">주문접수/배송준비 <%= stats.pendingOrdersCount %>건</span>
+      </article>
+
+      <article class="admin-kpi-card">
+        <span class="admin-kpi-label">등록 상품 수</span>
+        <strong class="admin-kpi-value"><%= stats.totalProducts %>개</strong>
+        <span class="admin-kpi-meta">품절 <%= stats.soldOutProducts %>개 · 재고부족 <%= stats.lowStockProducts %>개</span>
+      </article>
+
+      <article class="admin-kpi-card">
+        <span class="admin-kpi-label">전체 회원 수</span>
+        <strong class="admin-kpi-value"><%= stats.totalMembers %>명</strong>
+        <span class="admin-kpi-meta">일반 <%= stats.userCount %>명 · 관리자 <%= stats.adminCount %>명</span>
+      </article>
+    </section>
+
+    <section class="admin-panel" style="margin-bottom: 22px;" aria-label="주문 상태별 현황">
+      <div class="admin-panel-head">
+        <h2 class="admin-panel-title">주문 상태별 현황</h2>
+        <a href="/admin/orders" class="section-more-link">주문 관리 &rarr;</a>
+      </div>
+      <div class="admin-status-summary">
+        <% orderStatuses.forEach(function(st) { %>
+          <a href="/admin/orders?status=<%= encodeURIComponent(st) %>" class="admin-status-chip">
+            <span><%= st %></span>
+            <strong><%= stats.statusCounts[st] || 0 %>건</strong>
+          </a>
+        <% }); %>
+      </div>
+    </section>
+
+    <div class="admin-dashboard-grid">
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">최근 주문</h2>
+          <a href="/admin/orders" class="section-more-link">전체 보기 &rarr;</a>
+        </div>
+
+        <% if (recentOrders && recentOrders.length > 0) { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>주문번호</th>
+                  <th>주문자</th>
+                  <th>금액</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentOrders.forEach(function(order) { %>
+                  <tr>
+                    <td>
+                      <a href="/admin/orders/<%= order.member_id %>/<%= encodeURIComponent(order.order_id) %>" class="admin-table-link">
+                        <strong><%= order.order_id %></strong>
+                      </a>
+                      <span class="admin-cell-sub"><%= formatKoreanDateTime(order.order_date) %></span>
+                    </td>
+                    <td>
+                      <%= order.member_name %>
+                      <span class="admin-cell-sub">@<%= order.member_userid %></span>
+                    </td>
+                    <td class="admin-cell-nowrap"><%= Number(order.total_price).toLocaleString('ko-KR') %>원</td>
+                    <td>
+                      <span class="order-status-badge <%= order.status === '주문취소' ? 'is-cancelled' : '' %>"><%= order.status %></span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="admin-empty-text">아직 접수된 주문이 없습니다.</p>
+        <% } %>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">재고 주의 상품 (5개 이하)</h2>
+          <a href="/admin/products" class="section-more-link">상품 관리 &rarr;</a>
+        </div>
+
+        <% if (lowStockList && lowStockList.length > 0) { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>상품명</th>
+                  <th>카테고리</th>
+                  <th>재고</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% lowStockList.forEach(function(item) { %>
+                  <tr>
+                    <td><strong><%= item.name %></strong></td>
+                    <td><span class="admin-badge"><%= item.category %></span></td>
+                    <td>
+                      <span class="admin-stock-pill <%= Number(item.stock) <= 0 ? 'is-soldout' : 'is-low' %>">
+                        <%= Number(item.stock) <= 0 ? '품절' : item.stock + '개' %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/admin/products/<%= item.id %>/edit" class="admin-action-link">수정</a>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="admin-empty-text">재고가 부족하거나 품절된 상품이 없습니다.</p>
+        <% } %>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">최근 등록 상품</h2>
+          <a href="/admin/products/new" class="btn btn-primary admin-btn-xs">+ 상품 등록</a>
+        </div>
+
+        <% if (recentProducts && recentProducts.length > 0) { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>상품</th>
+                  <th>가격</th>
+                  <th>재고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentProducts.forEach(function(product) { %>
+                  <tr>
+                    <td>
+                      <a href="/admin/products/<%= product.id %>/edit" class="admin-table-link">
+                        <strong><%= product.name %></strong>
+                      </a>
+                      <span class="admin-cell-sub"><%= product.category %></span>
+                    </td>
+                    <td class="admin-cell-nowrap"><%= Number(product.price).toLocaleString('ko-KR') %>원</td>
+                    <td><%= product.stock %>개</td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="admin-empty-text">등록된 상품이 없습니다.</p>
+        <% } %>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">최근 가입 회원</h2>
+          <a href="/admin/members" class="section-more-link">전체 보기 &rarr;</a>
+        </div>
+
+        <% if (recentMembers && recentMembers.length > 0) { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>아이디 / 이름</th>
+                  <th>권한</th>
+                  <th>가입일</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% recentMembers.forEach(function(member) { %>
+                  <tr>
+                    <td>
+                      <a href="/admin/members/<%= member.id %>" class="admin-table-link">
+                        <strong><%= member.name %></strong>
+                      </a>
+                      <span class="admin-cell-sub">@<%= member.userid %></span>
+                    </td>
+                    <td>
+                      <span class="admin-badge <%= member.role === 'admin' ? 'is-admin' : '' %>">
+                        <%= member.role === 'admin' ? '관리자' : '일반회원' %>
+                      </span>
+                    </td>
+                    <td class="admin-cell-sub"><%= formatKoreanDateTime(member.created_at) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="admin-empty-text">가입된 회원이 없습니다.</p>
+        <% } %>
+      </section>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

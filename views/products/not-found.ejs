@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+
+<main class="products-main">
+  <div class="container">
+    <div class="empty-state-box not-found-box">
+      <span class="section-eyebrow">404 NOT FOUND</span>
+      <h1 class="not-found-title">상품을 찾을 수 없습니다.</h1>
+      <p class="empty-state-desc"><%= message %></p>
+      <div class="empty-state-action">
+        <a href="/products" class="btn btn-primary">상품 목록으로 이동</a>
+        <a href="/" class="btn btn-outline">메인으로 이동</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

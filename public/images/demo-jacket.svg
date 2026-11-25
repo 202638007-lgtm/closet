@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="클래식 울 자켓">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M220 205 L265 185 L300 230 L335 185 L380 205 L440 250 L460 440 L405 450 L388 310 L388 540 L212 540 L212 310 L195 450 L140 440 L160 250 Z" fill="#5b493a" />
+  <path d="M265 185 L300 295 L335 185" fill="none" stroke="#e9dfd1" stroke-width="3" />
+  <line x1="300" y1="295" x2="300" y2="540" stroke="#423428" stroke-width="2" />
+  <rect x="228" y="420" width="46" height="40" fill="none" stroke="#c8b69e" stroke-width="2" />
+  <rect x="326" y="420" width="46" height="40" fill="none" stroke="#c8b69e" stroke-width="2" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">OUTER</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">CLASSIC WOOL JACKET</text>
+</svg>

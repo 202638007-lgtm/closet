@@ -1,0 +1,144 @@
+<%- include('../partials/header') %>
+
+<main class="product-detail-main">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="상품 경로">
+      <a href="/">HOME</a>
+      <span>/</span>
+      <a href="/products">PRODUCTS</a>
+      <span>/</span>
+      <a href="/products?category=<%= encodeURIComponent(product.category) %>"><%= product.category %></a>
+    </nav>
+
+    <% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+      <div class="alert <%= flash.type === 'error' ? 'alert-error' : 'alert-success' %>" role="alert">
+        <%= flash.message %>
+      </div>
+    <% } %>
+
+    <section class="product-detail-grid">
+      <div class="detail-gallery">
+        <div class="detail-image-wrap">
+          <img
+            src="<%= product.image ? product.image : '/images/no-image.svg' %>"
+            alt="<%= product.name %>"
+            class="detail-image"
+          />
+        </div>
+      </div>
+
+      <div class="detail-info">
+        <div class="detail-category-row">
+          <span class="detail-category"><%= product.category %></span>
+          <span class="detail-stock-badge <%= Number(product.stock) <= 0 ? 'is-soldout' : '' %>">
+            <%= Number(product.stock) > 0 ? '재고 ' + product.stock + '개' : '품절' %>
+          </span>
+        </div>
+
+        <h1 class="detail-title"><%= product.name %></h1>
+        <p class="detail-price"><%= Number(product.price).toLocaleString('ko-KR') %>원</p>
+
+        <div class="detail-divider"></div>
+
+        <div class="detail-description-block">
+          <h2 class="detail-section-label">상품 설명</h2>
+          <p class="detail-description"><%= product.description || '등록된 상품 설명이 없습니다.' %></p>
+        </div>
+
+        <form action="/cart/add" method="POST" class="detail-cart-form">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="product_id" value="<%= product.id %>" />
+
+          <div class="detail-options">
+            <div class="option-group">
+              <h2 class="detail-section-label">사이즈 <% if (sizes && sizes.length > 0) { %><span class="required-mark">*</span><% } %></h2>
+              <% if (sizes && sizes.length > 0) { %>
+                <div class="option-pill-list" data-option-group="size">
+                  <% sizes.forEach(function(size, idx) { %>
+                    <label class="option-pill">
+                      <input
+                        type="radio"
+                        name="size"
+                        value="<%= size %>"
+                        <%= idx === 0 ? 'checked' : '' %>
+                        required
+                      />
+                      <span><%= size %></span>
+                    </label>
+                  <% }); %>
+                </div>
+              <% } else { %>
+                <p class="option-empty-text">제공되는 사이즈 옵션이 없습니다.</p>
+              <% } %>
+            </div>
+
+            <div class="option-group">
+              <h2 class="detail-section-label">색상 <% if (colors && colors.length > 0) { %><span class="required-mark">*</span><% } %></h2>
+              <% if (colors && colors.length > 0) { %>
+                <div class="option-pill-list" data-option-group="color">
+                  <% colors.forEach(function(color, idx) { %>
+                    <label class="option-pill">
+                      <input
+                        type="radio"
+                        name="color"
+                        value="<%= color %>"
+                        <%= idx === 0 ? 'checked' : '' %>
+                        required
+                      />
+                      <span><%= color %></span>
+                    </label>
+                  <% }); %>
+                </div>
+              <% } else { %>
+                <p class="option-empty-text">제공되는 색상 옵션이 없습니다.</p>
+              <% } %>
+            </div>
+
+            <% if (Number(product.stock) > 0) { %>
+              <div class="option-group">
+                <label for="detailQuantity" class="detail-section-label">수량</label>
+                <div class="detail-qty-wrap">
+                  <button type="button" class="qty-step-btn" data-qty-step="-1" aria-label="수량 감소">-</button>
+                  <input
+                    type="number"
+                    id="detailQuantity"
+                    name="quantity"
+                    value="1"
+                    min="1"
+                    max="<%= Number(product.stock) %>"
+                    class="cart-qty-input"
+                    required
+                  />
+                  <button type="button" class="qty-step-btn" data-qty-step="1" aria-label="수량 증가">+</button>
+                </div>
+              </div>
+            <% } %>
+          </div>
+
+          <div class="detail-actions">
+            <% if (Number(product.stock) <= 0) { %>
+              <button type="button" class="btn btn-primary btn-full detail-cart-btn" disabled>
+                품절된 상품입니다
+              </button>
+            <% } else if (typeof currentUser !== 'undefined' && currentUser) { %>
+              <button type="submit" class="btn btn-primary btn-full">
+                장바구니 담기
+              </button>
+            <% } else { %>
+              <a href="/auth/login" class="btn btn-primary btn-full">
+                로그인 후 장바구니 담기
+              </a>
+            <% } %>
+            <a href="/products" class="btn btn-outline btn-full">상품 목록으로 돌아가기</a>
+          </div>
+
+          <% if (Number(product.stock) > 0 && !(typeof currentUser !== 'undefined' && currentUser)) { %>
+            <p class="detail-helper-note">로그인한 회원만 장바구니에 상품을 담을 수 있습니다.</p>
+          <% } %>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

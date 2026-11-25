@@ -1,0 +1,117 @@
+<%- include('../partials/header') %>
+
+<main class="admin-main">
+  <div class="container">
+    <%- include('./_nav', {
+      adminHeading: '회원 상세 정보',
+      adminSubtitle: member.name + ' (@' + member.userid + ') 님의 프로필 및 주문 내역입니다.'
+    }) %>
+
+    <div class="admin-detail-grid">
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">기본 정보</h2>
+          <span class="admin-badge <%= member.role === 'admin' ? 'is-admin' : '' %>">
+            <%= member.role === 'admin' ? '관리자' : '일반회원' %>
+          </span>
+        </div>
+
+        <dl class="shipping-dl">
+          <div class="shipping-dl-row">
+            <dt>회원 번호</dt>
+            <dd>#<%= member.id %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>아이디</dt>
+            <dd><strong><%= member.userid %></strong></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>이름</dt>
+            <dd><%= member.name %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>이메일</dt>
+            <dd><%= member.email %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>연락처</dt>
+            <dd><%= member.phone || '-' %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>기본 주소</dt>
+            <dd><%= member.address || '-' %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>가입일</dt>
+            <dd><%= formatKoreanDateTime(member.created_at) %></dd>
+          </div>
+          <div class="shipping-dl-row">
+            <dt>누적 결제액</dt>
+            <dd><strong><%= Number(member.totalSpent).toLocaleString('ko-KR') %>원</strong></dd>
+          </div>
+        </dl>
+
+        <div class="admin-role-box">
+          <h3 class="detail-section-label">권한 설정</h3>
+          <% if (currentUser && Number(currentUser.id) === Number(member.id)) { %>
+            <p class="admin-cell-sub">현재 로그인 중인 관리자 본인의 권한은 변경할 수 없습니다.</p>
+          <% } else { %>
+            <form action="/admin/members/<%= member.id %>/role" method="POST" class="admin-status-form">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <input type="hidden" name="redirect_to" value="detail" />
+              <select name="role" class="form-input admin-select-sm" aria-label="회원 권한 선택">
+                <option value="user" <%= member.role === 'user' ? 'selected' : '' %>>일반회원 (user)</option>
+                <option value="admin" <%= member.role === 'admin' ? 'selected' : '' %>>관리자 (admin)</option>
+              </select>
+              <button type="submit" class="btn btn-primary admin-btn-sm">권한 저장</button>
+            </form>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">주문 내역 (<%= orders.length %>건)</h2>
+          <a href="/admin/members" class="section-more-link">&larr; 회원 목록</a>
+        </div>
+
+        <% if (orders && orders.length > 0) { %>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>주문번호</th>
+                  <th>주문일</th>
+                  <th>수량</th>
+                  <th>금액</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach(function(order) { %>
+                  <tr>
+                    <td>
+                      <a href="/admin/orders/<%= member.id %>/<%= encodeURIComponent(order.order_id) %>" class="admin-table-link">
+                        <strong><%= order.order_id %></strong>
+                      </a>
+                    </td>
+                    <td class="admin-cell-sub"><%= formatKoreanDateTime(order.order_date) %></td>
+                    <td><%= order.total_quantity %>개</td>
+                    <td class="admin-cell-nowrap"><%= Number(order.total_price).toLocaleString('ko-KR') %>원</td>
+                    <td>
+                      <span class="order-status-badge <%= order.status === '주문취소' ? 'is-cancelled' : '' %>"><%= order.status %></span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="admin-empty-text">이 회원의 주문 내역이 없습니다.</p>
+        <% } %>
+      </section>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

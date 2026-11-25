@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="베이직 맨투맨">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M235 215 Q300 242 365 215 L438 258 L465 448 L412 458 L388 322 L388 555 L212 555 L212 322 L188 458 L135 448 L162 258 Z" fill="#b7b2aa" />
+  <path d="M244 218 Q300 252 356 218" fill="none" stroke="#8f8980" stroke-width="5" />
+  <path d="M286 244 L300 264 L314 244 Z" fill="#9c968d" />
+  <line x1="212" y1="538" x2="388" y2="538" stroke="#9c968d" stroke-width="6" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">BEST</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">BASIC SWEATSHIRT</text>
+</svg>

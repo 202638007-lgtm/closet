@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="코튼 팬츠">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M215 190 L385 190 L405 595 L322 595 L300 340 L278 595 L195 595 Z" fill="#cab89e" />
+  <line x1="213" y1="215" x2="387" y2="215" stroke="#9e8b70" stroke-width="2" />
+  <line x1="300" y1="190" x2="300" y2="298" stroke="#9e8b70" stroke-width="2" />
+  <line x1="252" y1="215" x2="246" y2="275" stroke="#9e8b70" stroke-width="1.5" />
+  <line x1="348" y1="215" x2="354" y2="275" stroke="#9e8b70" stroke-width="1.5" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">BOTTOM</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">RELAXED COTTON PANTS</text>
+</svg>

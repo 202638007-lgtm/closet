@@ -1,0 +1,108 @@
+<%- include('../partials/header') %>
+
+<main class="admin-main">
+  <div class="container">
+    <%- include('./_nav', {
+      adminHeading: '회원 관리',
+      adminSubtitle: '총 ' + members.length + '명의 회원이 조회되었습니다.'
+    }) %>
+
+    <div class="admin-toolbar">
+      <div class="category-tabs">
+        <a href="/admin/members" class="category-tab <%= !activeRole ? 'is-active' : '' %>">ALL</a>
+        <a href="/admin/members?role=user" class="category-tab <%= activeRole === 'user' ? 'is-active' : '' %>">일반회원</a>
+        <a href="/admin/members?role=admin" class="category-tab <%= activeRole === 'admin' ? 'is-active' : '' %>">관리자</a>
+      </div>
+
+      <form action="/admin/members" method="GET" class="admin-search-form" role="search">
+        <% if (activeRole) { %>
+          <input type="hidden" name="role" value="<%= activeRole %>" />
+        <% } %>
+        <input
+          type="search"
+          name="search"
+          class="inline-search-input"
+          placeholder="아이디, 이름, 이메일 검색"
+          value="<%= searchTerm || '' %>"
+          maxlength="50"
+          aria-label="회원 검색"
+        />
+        <button type="submit" class="btn btn-outline admin-btn-sm">검색</button>
+      </form>
+    </div>
+
+    <% if (members && members.length > 0) { %>
+      <div class="admin-panel">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>이메일 / 연락처</th>
+                <th>권한</th>
+                <th>주문 / 누적금액</th>
+                <th>가입일</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% members.forEach(function(member) { %>
+                <tr>
+                  <td>#<%= member.id %></td>
+                  <td>
+                    <a href="/admin/members/<%= member.id %>" class="admin-table-link">
+                      <strong><%= member.userid %></strong>
+                    </a>
+                  </td>
+                  <td><%= member.name %></td>
+                  <td>
+                    <span><%= member.email %></span>
+                    <span class="admin-cell-sub"><%= member.phone || '-' %></span>
+                  </td>
+                  <td>
+                    <span class="admin-badge <%= member.role === 'admin' ? 'is-admin' : '' %>">
+                      <%= member.role === 'admin' ? '관리자' : '일반회원' %>
+                    </span>
+                  </td>
+                  <td>
+                    <span><%= member.orderCount %>건</span>
+                    <span class="admin-cell-sub"><%= Number(member.totalSpent).toLocaleString('ko-KR') %>원</span>
+                  </td>
+                  <td class="admin-cell-sub admin-cell-nowrap"><%= formatKoreanDateTime(member.created_at) %></td>
+                  <td>
+                    <div class="admin-row-actions">
+                      <a href="/admin/members/<%= member.id %>" class="btn btn-outline admin-btn-xs">상세</a>
+                      <% if (currentUser && Number(currentUser.id) === Number(member.id)) { %>
+                        <span class="admin-self-tag">본인</span>
+                      <% } else { %>
+                        <form action="/admin/members/<%= member.id %>/role" method="POST" class="admin-inline-form">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                          <input type="hidden" name="role" value="<%= member.role === 'admin' ? 'user' : 'admin' %>" />
+                          <button type="submit" class="btn btn-beige admin-btn-xs">
+                            <%= member.role === 'admin' ? '일반으로' : '관리자로' %>
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="empty-state-box">
+        <p class="empty-state-title">조건에 해당하는 회원이 없습니다.</p>
+        <p class="empty-state-desc">검색어 또는 권한 필터를 변경해 보세요.</p>
+        <div class="empty-state-action">
+          <a href="/admin/members" class="btn btn-outline">전체 회원 보기</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

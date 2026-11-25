@@ -1,0 +1,141 @@
+<%- include('../partials/header') %>
+
+<main class="admin-main">
+  <div class="container">
+    <%- include('./_nav', {
+      adminHeading: isEdit ? '상품 정보 수정' : '새 상품 등록',
+      adminSubtitle: isEdit ? '등록된 상품의 상세 정보와 재고를 수정합니다.' : '쇼핑몰에 진열할 새 상품을 등록합니다.'
+    }) %>
+
+    <section class="admin-form-card">
+      <% if (error) { %>
+        <div class="alert alert-error" role="alert"><%= error %></div>
+      <% } %>
+
+      <form
+        action="<%= isEdit ? '/admin/products/' + productId + '/edit' : '/admin/products' %>"
+        method="POST"
+        class="auth-form"
+      >
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+        <div class="form-row-two">
+          <div class="form-group">
+            <label for="name" class="form-label">상품명 <span class="required-mark">*</span></label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              maxlength="100"
+              value="<%= formData.name || '' %>"
+              placeholder="예: 캐시미어 블렌드 발마칸 코트"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="category" class="form-label">카테고리 <span class="required-mark">*</span></label>
+            <select id="category" name="category" class="form-input" required>
+              <% categories.forEach(function(cat) { %>
+                <option value="<%= cat %>" <%= formData.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-two">
+          <div class="form-group">
+            <label for="price" class="form-label">판매 가격 (원) <span class="required-mark">*</span></label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              class="form-input"
+              min="0"
+              max="100000000"
+              step="1"
+              value="<%= formData.price !== undefined ? formData.price : '' %>"
+              placeholder="예: 189000"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="stock" class="form-label">재고 수량 <span class="required-mark">*</span></label>
+            <input
+              type="number"
+              id="stock"
+              name="stock"
+              class="form-input"
+              min="0"
+              max="100000"
+              step="1"
+              value="<%= formData.stock !== undefined ? formData.stock : '0' %>"
+              placeholder="예: 20"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="image" class="form-label">이미지 경로 또는 URL</label>
+          <input
+            type="text"
+            id="image"
+            name="image"
+            class="form-input"
+            maxlength="255"
+            value="<%= formData.image || '' %>"
+            placeholder="/images/product.jpg 또는 https://... (비워두면 기본 이미지 사용)"
+          />
+        </div>
+
+        <div class="form-row-two">
+          <div class="form-group">
+            <label for="sizes" class="form-label">사이즈 옵션 (쉼표로 구분)</label>
+            <input
+              type="text"
+              id="sizes"
+              name="sizes"
+              class="form-input"
+              value="<%= formData.sizes || '' %>"
+              placeholder="예: S, M, L 또는 FREE"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="colors" class="form-label">색상 옵션 (쉼표로 구분)</label>
+            <input
+              type="text"
+              id="colors"
+              name="colors"
+              class="form-input"
+              value="<%= formData.colors || '' %>"
+              placeholder="예: BLACK, BEIGE, IVORY"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="form-label">상품 설명</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="5"
+            maxlength="5000"
+            class="form-input admin-textarea"
+            placeholder="소재, 핏, 스타일링 포인트 등 상품 상세 설명을 입력하세요."
+          ><%= formData.description || '' %></textarea>
+        </div>
+
+        <div class="admin-form-actions">
+          <a href="/admin/products" class="btn btn-outline">취소</a>
+          <button type="submit" class="btn btn-primary"><%= isEdit ? '수정 사항 저장' : '상품 등록하기' %></button>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

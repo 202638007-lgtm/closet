@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="데일리 니트">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M235 215 Q300 245 365 215 L435 255 L465 445 L412 455 L388 320 L388 555 L212 555 L212 320 L188 455 L135 445 L165 255 Z" fill="#dfd3c2" stroke="#c3b49e" stroke-width="2" />
+  <path d="M245 218 Q300 250 355 218" fill="none" stroke="#9e8c74" stroke-width="4" />
+  <line x1="212" y1="535" x2="388" y2="535" stroke="#c3b49e" stroke-width="4" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">TOP</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">DAILY KNITWEAR</text>
+</svg>

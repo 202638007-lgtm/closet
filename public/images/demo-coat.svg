@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="베이직 오버핏 코트">
+  <rect width="600" height="800" fill="#f5f2ec" />
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#e4dccf" stroke-width="2" />
+  <path d="M225 185 L265 165 L300 205 L335 165 L375 185 L435 235 L465 445 L410 455 L390 300 L390 610 L210 610 L210 300 L190 455 L135 445 L165 235 Z" fill="#2c2926" />
+  <path d="M265 165 L300 270 L335 165" fill="none" stroke="#d8cfc1" stroke-width="3" />
+  <line x1="300" y1="270" x2="300" y2="610" stroke="#47423c" stroke-width="2" />
+  <circle cx="288" cy="340" r="5" fill="#c8b69e" />
+  <circle cx="288" cy="400" r="5" fill="#c8b69e" />
+  <circle cx="288" cy="460" r="5" fill="#c8b69e" />
+  <text x="300" y="685" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" letter-spacing="4" fill="#111111">OUTER</text>
+  <text x="300" y="715" text-anchor="middle" font-family="sans-serif" font-size="14" letter-spacing="1" fill="#66615b">BASIC OVERFIT COAT</text>
+</svg>

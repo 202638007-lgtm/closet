@@ -1,0 +1,147 @@
+<%- include('partials/header') %>
+
+<main class="main-content">
+  <% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+    <div class="container flash-banner-wrap">
+      <div class="alert <%= flash.type === 'error' ? 'alert-error' : 'alert-success' %>" role="alert">
+        <%= flash.message %>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- 1. 메인 배너 -->
+  <section class="hero-section">
+    <div class="container hero-inner">
+      <div class="hero-text-col">
+        <span class="hero-eyebrow">2026 SEASON COLLECTION</span>
+        <h1 class="hero-title">ESSENTIAL<br />MINIMAL<br />CLOSET</h1>
+        <p class="hero-subtitle">
+          시간이 지나도 변하지 않는 담백한 실루엣과 차분한 베이지 톤의 데일리 웨어.
+          불필요한 장식을 덜어낸 CLOSET의 시즌 컬렉션을 만나보세요.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#featured-products" class="btn btn-primary">상품 둘러보기</a>
+          <a href="#category-section" class="btn btn-outline">카테고리 보기</a>
+        </div>
+      </div>
+
+      <div class="hero-visual-col">
+        <div class="hero-image-frame">
+          <img
+            src="/images/hero-banner.svg"
+            alt="CLOSET 미니멀 패션 메인 배너 이미지"
+            class="hero-image"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 카테고리 영역 -->
+  <section class="section category-section" id="category-section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-eyebrow">CATEGORIES</span>
+          <h2 class="section-title">카테고리</h2>
+        </div>
+      </div>
+
+      <div class="category-grid">
+        <% categories.forEach(function(cat) { %>
+          <a href="/products?category=<%= encodeURIComponent(cat.code) %>" class="category-card">
+            <span class="category-code"><%= cat.code %></span>
+            <strong class="category-label"><%= cat.label %></strong>
+            <span class="category-desc"><%= cat.desc %></span>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 추천 상품 영역 -->
+  <section class="section product-section" id="featured-products">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-eyebrow">CURATED FOR YOU</span>
+          <h2 class="section-title">추천 상품</h2>
+        </div>
+        <a href="/products?category=BEST" class="section-more-link">전체 보기 &rarr;</a>
+      </div>
+
+      <% if (recommendedProducts && recommendedProducts.length > 0) { %>
+        <div class="product-grid">
+          <% recommendedProducts.forEach(function(product) { %>
+            <article class="product-card">
+              <a href="/products/<%= product.id %>" class="product-card-link">
+                <div class="product-thumb-wrap">
+                  <img
+                    src="<%= product.image ? product.image : '/images/no-image.svg' %>"
+                    alt="<%= product.name %>"
+                    class="product-thumb"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="product-info">
+                  <span class="product-category"><%= product.category %></span>
+                  <h3 class="product-name"><%= product.name %></h3>
+                  <p class="product-price"><%= Number(product.price).toLocaleString('ko-KR') %>원</p>
+                </div>
+              </a>
+            </article>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="empty-state-box">
+          <p class="empty-state-title">현재 등록된 추천 상품이 없습니다.</p>
+          <p class="empty-state-desc">곧 CLOSET의 큐레이션 아이템이 업데이트될 예정입니다.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- 4. 신상품 영역 -->
+  <section class="section product-section section-tinted" id="new-arrivals">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-eyebrow">NEW ARRIVALS</span>
+          <h2 class="section-title">신상품</h2>
+        </div>
+        <a href="/products?category=NEW" class="section-more-link">전체 보기 &rarr;</a>
+      </div>
+
+      <% if (newProducts && newProducts.length > 0) { %>
+        <div class="product-grid">
+          <% newProducts.forEach(function(product) { %>
+            <article class="product-card">
+              <a href="/products/<%= product.id %>" class="product-card-link">
+                <div class="product-thumb-wrap">
+                  <img
+                    src="<%= product.image ? product.image : '/images/no-image.svg' %>"
+                    alt="<%= product.name %>"
+                    class="product-thumb"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="product-info">
+                  <span class="product-category"><%= product.category %></span>
+                  <h3 class="product-name"><%= product.name %></h3>
+                  <p class="product-price"><%= Number(product.price).toLocaleString('ko-KR') %>원</p>
+                </div>
+              </a>
+            </article>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="empty-state-box">
+          <p class="empty-state-title">현재 등록된 신상품이 없습니다.</p>
+          <p class="empty-state-desc">새로운 시즌 상품이 준비되는 대로 이곳에 표시됩니다.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

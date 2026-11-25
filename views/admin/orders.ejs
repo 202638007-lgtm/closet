@@ -1,0 +1,118 @@
+<%- include('../partials/header') %>
+
+<main class="admin-main">
+  <div class="container">
+    <%- include('./_nav', {
+      adminHeading: '주문 관리',
+      adminSubtitle: '총 ' + orders.length + '건의 주문이 조회되었습니다.'
+    }) %>
+
+    <div class="admin-toolbar">
+      <div class="category-tabs">
+        <a href="/admin/orders" class="category-tab <%= !activeStatus ? 'is-active' : '' %>">ALL</a>
+        <% statuses.forEach(function(st) { %>
+          <a
+            href="/admin/orders?status=<%= encodeURIComponent(st) %>"
+            class="category-tab <%= activeStatus === st ? 'is-active' : '' %>"
+          ><%= st %></a>
+        <% }); %>
+      </div>
+
+      <form action="/admin/orders" method="GET" class="admin-search-form" role="search">
+        <% if (activeStatus) { %>
+          <input type="hidden" name="status" value="<%= activeStatus %>" />
+        <% } %>
+        <input
+          type="search"
+          name="search"
+          class="inline-search-input"
+          placeholder="주문번호, 아이디, 수령인, 상품명"
+          value="<%= searchTerm || '' %>"
+          maxlength="50"
+          aria-label="주문 검색"
+        />
+        <button type="submit" class="btn btn-outline admin-btn-sm">검색</button>
+      </form>
+    </div>
+
+    <% if (orders && orders.length > 0) { %>
+      <div class="admin-panel">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>주문번호 / 주문일</th>
+                <th>주문자 / 수령인</th>
+                <th>주문 상품</th>
+                <th>결제 금액</th>
+                <th>상태 변경</th>
+                <th>상세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(function(order) { %>
+                <tr>
+                  <td>
+                    <a href="/admin/orders/<%= order.member_id %>/<%= encodeURIComponent(order.order_id) %>" class="admin-table-link">
+                      <strong><%= order.order_id %></strong>
+                    </a>
+                    <span class="admin-cell-sub"><%= formatKoreanDateTime(order.order_date) %></span>
+                  </td>
+                  <td>
+                    <a href="/admin/members/<%= order.member_id %>" class="admin-table-link">
+                      <%= order.member_name %> (@<%= order.member_userid %>)
+                    </a>
+                    <span class="admin-cell-sub">수령: <%= order.shipping ? order.shipping.name : '-' %></span>
+                  </td>
+                  <td>
+                    <% if (order.items && order.items.length > 0) { %>
+                      <span>
+                        <%= order.items[0].product_name %>
+                        <% if (order.items.length > 1) { %>외 <%= order.items.length - 1 %>건<% } %>
+                      </span>
+                      <span class="admin-cell-sub">총 <%= order.total_quantity %>개</span>
+                    <% } else { %>
+                      <span>-</span>
+                    <% } %>
+                  </td>
+                  <td class="admin-cell-nowrap"><strong><%= Number(order.total_price).toLocaleString('ko-KR') %>원</strong></td>
+                  <td>
+                    <form
+                      action="/admin/orders/<%= order.member_id %>/<%= encodeURIComponent(order.order_id) %>/status"
+                      method="POST"
+                      class="admin-status-form"
+                    >
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <select name="status" class="form-input admin-select-sm" aria-label="주문 상태 선택">
+                        <% statuses.forEach(function(st) { %>
+                          <option value="<%= st %>" <%= order.status === st ? 'selected' : '' %>><%= st %></option>
+                        <% }); %>
+                      </select>
+                      <button type="submit" class="btn btn-primary admin-btn-xs">변경</button>
+                    </form>
+                  </td>
+                  <td>
+                    <a
+                      href="/admin/orders/<%= order.member_id %>/<%= encodeURIComponent(order.order_id) %>"
+                      class="btn btn-outline admin-btn-xs"
+                    >상세</a>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="empty-state-box">
+        <p class="empty-state-title">조건에 해당하는 주문이 없습니다.</p>
+        <p class="empty-state-desc">검색어 또는 상태 필터를 변경해 보세요.</p>
+        <div class="empty-state-action">
+          <a href="/admin/orders" class="btn btn-outline">전체 주문 보기</a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

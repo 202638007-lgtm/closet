@@ -1,0 +1,114 @@
+<%- include('../partials/header') %>
+
+<main class="admin-main">
+  <div class="container">
+    <%- include('./_nav', {
+      adminHeading: '주문 상세 관리',
+      adminSubtitle: order.order_id + ' · ' + formatKoreanDateTime(order.order_date)
+    }) %>
+
+    <div class="order-detail-layout">
+      <section class="order-box">
+        <div class="admin-panel-head">
+          <h2 class="admin-panel-title">주문 상품 (<%= order.total_quantity %>개)</h2>
+          <span class="order-status-badge <%= order.status === '주문취소' ? 'is-cancelled' : '' %>"><%= order.status %></span>
+        </div>
+
+        <div class="order-item-list">
+          <% order.items.forEach(function(item) { %>
+            <article class="order-item-row">
+              <img
+                src="<%= item.image ? item.image : '/images/no-image.svg' %>"
+                alt="<%= item.product_name %>"
+                class="order-item-thumb"
+              />
+              <div class="order-item-info">
+                <h3 class="order-item-name"><%= item.product_name %></h3>
+                <p class="order-item-meta">
+                  <% if (item.size) { %><span>사이즈: <%= item.size %></span><% } %>
+                  <% if (item.color) { %><span>색상: <%= item.color %></span><% } %>
+                  <span>수량: <%= item.quantity %>개</span>
+                </p>
+                <p class="order-item-unit">단가 <%= Number(item.price).toLocaleString('ko-KR') %>원</p>
+              </div>
+              <div class="order-item-total">
+                <%= (Number(item.price) * Number(item.quantity)).toLocaleString('ko-KR') %>원
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <div class="order-detail-side">
+        <section class="order-box">
+          <h2 class="order-box-title">주문 상태 변경</h2>
+          <form
+            action="/admin/orders/<%= member.id %>/<%= encodeURIComponent(order.order_id) %>/status"
+            method="POST"
+            class="admin-status-form"
+          >
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <input type="hidden" name="redirect_to" value="detail" />
+            <select name="status" class="form-input admin-select-sm" aria-label="주문 상태 선택">
+              <% statuses.forEach(function(st) { %>
+                <option value="<%= st %>" <%= order.status === st ? 'selected' : '' %>><%= st %></option>
+              <% }); %>
+            </select>
+            <button type="submit" class="btn btn-primary admin-btn-sm">상태 저장</button>
+          </form>
+        </section>
+
+        <section class="order-box">
+          <h2 class="order-box-title">결제 요약</h2>
+          <div class="summary-row">
+            <span>총 상품 수량</span>
+            <span><%= order.total_quantity %>개</span>
+          </div>
+          <div class="summary-row">
+            <span>배송비</span>
+            <span>무료</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-total-row">
+            <span>총 주문 금액</span>
+            <strong><%= Number(order.total_price).toLocaleString('ko-KR') %>원</strong>
+          </div>
+        </section>
+
+        <section class="order-box">
+          <h2 class="order-box-title">주문자 &amp; 배송 정보</h2>
+          <dl class="shipping-dl">
+            <div class="shipping-dl-row">
+              <dt>주문자</dt>
+              <dd>
+                <a href="/admin/members/<%= member.id %>" class="admin-table-link">
+                  <strong><%= member.name %></strong> (@<%= member.userid %>)
+                </a>
+              </dd>
+            </div>
+            <div class="shipping-dl-row">
+              <dt>받는 분</dt>
+              <dd><%= order.shipping.name %></dd>
+            </div>
+            <div class="shipping-dl-row">
+              <dt>연락처</dt>
+              <dd><%= order.shipping.phone %></dd>
+            </div>
+            <div class="shipping-dl-row">
+              <dt>배송 주소</dt>
+              <dd><%= order.shipping.address %> <%= order.shipping.detail_address || '' %></dd>
+            </div>
+            <div class="shipping-dl-row">
+              <dt>배송 메모</dt>
+              <dd><%= order.shipping.memo || '-' %></dd>
+            </div>
+          </dl>
+        </section>
+
+        <a href="/admin/orders" class="btn btn-outline btn-full">주문 관리 목록으로</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
